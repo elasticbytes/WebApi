@@ -55,7 +55,7 @@ namespace Microsoft.AspNet.OData.Routing
 
                     string queryString = request.QueryString.HasValue ? request.QueryString.ToString() : null;
 
-                    path = GetODataPath(oDataPathValue as string, requestLeftPartBuilder.ToString(), queryString, () => request.CreateRequestContainer(RouteName));
+                    path = GetODataPath(oDataPathValue as string, requestLeftPartBuilder.ToString(), queryString, () => CreateRequestContainer(request, values));
                 }
 
                 if (path != null)
@@ -77,6 +77,11 @@ namespace Microsoft.AspNet.OData.Routing
                 // This constraint only applies to incoming request.
                 return true;
             }
+        }
+
+        protected virtual System.IServiceProvider CreateRequestContainer(HttpRequest request, RouteValueDictionary values)
+        {
+            return request.CreateRequestContainer(RouteName);
         }
     }
 }
