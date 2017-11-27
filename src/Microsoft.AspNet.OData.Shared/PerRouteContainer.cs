@@ -8,7 +8,7 @@ using Microsoft.OData;
 
 namespace Microsoft.AspNet.OData
 {
-    internal class PerRouteContainer : IPerRouteContainer
+    public class PerRouteContainer : IPerRouteContainer
     {
         private ConcurrentDictionary<string, IServiceProvider> _perRouteContainers;
 

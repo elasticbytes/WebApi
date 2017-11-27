@@ -6,7 +6,7 @@ using Microsoft.OData;
 
 namespace Microsoft.AspNet.OData
 {
-    internal interface IPerRouteContainer
+    public interface IPerRouteContainer
     {
         /// <summary>
         /// Gets or sets a function to build an <see cref="IContainerBuilder"/>
