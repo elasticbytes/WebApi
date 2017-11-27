@@ -71,8 +71,9 @@ namespace Microsoft.AspNet.OData.Adapters
         /// <returns></returns>
         public bool IsCountRequest()
         {
-            ODataPath path = this.innerRequest.ODataFeature().Path;
-            return path != null && path.Segments.LastOrDefault() is CountSegment;
+            //ODataPath path = this.innerRequest.ODataFeature().Path;
+            //return path != null && path.Segments.LastOrDefault() is CountSegment;
+            return false;
         }
 
         /// <summary>
