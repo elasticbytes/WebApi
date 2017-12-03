@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Microsoft.AspNet.OData.Formatter
 {
@@ -13,6 +14,8 @@ namespace Microsoft.AspNet.OData.Formatter
     /// </summary>
     internal static class ODataMediaTypes
     {
+        public static readonly string ApplicationJsonType = "application";
+        public static readonly string ApplicationJsonSubtype = "json";
         public static readonly string ApplicationJson = "application/json";
         public static readonly string ApplicationJsonODataFullMetadata = "application/json; odata.metadata=full";
         public static readonly string ApplicationJsonODataFullMetadataStreamingFalse = "application/json; odata.metadata=full; odata.streaming=false";
@@ -27,31 +30,22 @@ namespace Microsoft.AspNet.OData.Formatter
         public static readonly string ApplicationJsonStreamingTrue = "application/json; odata.streaming=true";
         public static readonly string ApplicationXml = "application/xml";
 
-        public static ODataMetadataLevel GetMetadataLevel(string mediaType, IEnumerable<KeyValuePair<string, string>> parameters)
+        public static ODataMetadataLevel GetMetadataLevel(ref MediaType mediaType)
         {
-            if (mediaType == null)
+            if (!Equals(ApplicationJsonType, mediaType.Type, StringComparison.Ordinal) ||
+                !Equals(ApplicationJsonSubtype, mediaType.SubType, StringComparison.Ordinal))
             {
                 return ODataMetadataLevel.MinimalMetadata;
             }
 
-            if (!String.Equals(ODataMediaTypes.ApplicationJson, mediaType,
-                StringComparison.Ordinal))
+            var odataParameter = mediaType.GetParameter ("odata.metadata");
+            if (odataParameter.HasValue)
             {
-                return ODataMetadataLevel.MinimalMetadata;
-            }
-
-            Contract.Assert(parameters != null);
-            KeyValuePair<string, string> odataParameter =
-                parameters.FirstOrDefault(
-                    (p) => String.Equals("odata.metadata", p.Key, StringComparison.OrdinalIgnoreCase));
-
-            if (!odataParameter.Equals(default(KeyValuePair<string, string>)))
-            {
-                if (String.Equals("full", odataParameter.Value, StringComparison.OrdinalIgnoreCase))
+                if (Equals("full", odataParameter, StringComparison.OrdinalIgnoreCase))
                 {
                     return ODataMetadataLevel.FullMetadata;
                 }
-                if (String.Equals("none", odataParameter.Value, StringComparison.OrdinalIgnoreCase))
+                if (Equals("none", odataParameter, StringComparison.OrdinalIgnoreCase))
                 {
                     return ODataMetadataLevel.NoMetadata;
                 }
@@ -59,6 +53,12 @@ namespace Microsoft.AspNet.OData.Formatter
 
             // Minimal is the default metadata level
             return ODataMetadataLevel.MinimalMetadata;
+        }
+
+        private static bool Equals (string value, Microsoft.Extensions.Primitives.StringSegment segment, StringComparison comparison)
+        {
+            return segment.HasValue && segment.Length == value.Length &&
+                String.Compare (segment.Buffer, segment.Offset, value, 0, value.Length, comparison) == 0;
         }
     }
 }

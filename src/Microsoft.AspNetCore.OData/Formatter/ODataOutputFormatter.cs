@@ -287,7 +287,7 @@ namespace Microsoft.AspNet.OData.Formatter
 
             try
             {
-                WriteToStream(type, value, response.Body, request, request.ContentType, request.ContentLength);
+                WriteToStream(type, value, response.Body, request, new MediaType (context.ContentType), null);
                 return TaskHelpers.Completed();
             }
             catch (Exception ex)
@@ -297,7 +297,7 @@ namespace Microsoft.AspNet.OData.Formatter
         }
 
         //[SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Class coupling acceptable")]
-        private void WriteToStream(Type type, object value, Stream writeStream, HttpRequest request, string contentType, long? contentLength)
+        private void WriteToStream(Type type, object value, Stream writeStream, HttpRequest request, MediaType contentType, long? contentLength)
         {
             IEdmModel model = request.GetModel();
             if (model == null)
@@ -353,11 +353,7 @@ namespace Microsoft.AspNet.OData.Formatter
             ODataMetadataLevel metadataLevel = ODataMetadataLevel.MinimalMetadata;
             if (!contentLength.HasValue || contentLength.Value == 0)
             {
-                // TODO: Rewrite the parameter part.
-                //IEnumerable<KeyValuePair<string, string>> parameters =
-                //    contentType.Parameters.Select(val => new KeyValuePair<string, string>(val.Name, val.Value));
-                IEnumerable<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
-                metadataLevel = ODataMediaTypes.GetMetadataLevel(contentType, parameters);
+                metadataLevel = ODataMediaTypes.GetMetadataLevel(ref contentType);
             }
 
             using (ODataMessageWriter messageWriter = new ODataMessageWriter(responseMessage, writerSettings, model))
