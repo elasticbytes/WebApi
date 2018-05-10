@@ -106,6 +106,10 @@ namespace Microsoft.AspNet.OData.Routing
             return _pathLiteral;
         }
 
+        /// <summary>
+        /// Gets the semantic OData path.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage ("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly")]
         public Semantic.ODataPath ODLPath { get; internal set; }
     }
 }
