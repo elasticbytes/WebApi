@@ -10,6 +10,7 @@
     <RootNamespace>Microsoft.AspNet.OData</RootNamespace>
     <!-- Let's generate our own assembly info -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RunAnalyzers>false</RunAnalyzers>
   </PropertyGroup>
   <Import Project="..\Microsoft.AspNet.OData.Shared\Microsoft.AspNet.OData.Shared.projitems" Label="Shared" />
 

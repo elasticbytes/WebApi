@@ -56,10 +56,11 @@ namespace Microsoft.AspNet.OData.Adapters
             this.supportedHttpMethods = new List<ODataRequestMethod>();
 
             // Determine the supported methods.
-            IEnumerable<string> actionMethods = actionDescriptor.ActionConstraints?
+            IEnumerable<string> actionMethods = null ; /*actionDescriptor.ActionConstraints?
                 .OfType<HttpMethodActionConstraint>()
                 .FirstOrDefault()?
                 .HttpMethods;
+            */
 
             if (actionMethods == null)
             {
